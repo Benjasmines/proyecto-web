@@ -1,35 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import Home from "./pages/Home";
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Router>
+      <header style={{ marginBottom: "2rem" }}>
+        <h1>🎫 Sistema de Tickets</h1>
+        <nav>
+          <Link to="/" style={{ margin: "0 10px" }}>
+            Eventos
+          </Link>
+          <Link to="/purchases" style={{ margin: "0 10px" }}>
+            Mis Compras
+          </Link>
+        </nav>
+      </header>
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+        {/* Dejar rutas futuras como placeholders */}
+        <Route path="/event/:id" element={<h2>Detalle del evento próximamente</h2>} />
+        <Route path="/checkout/:id" element={<h2>Checkout próximamente</h2>} />
+        <Route path="/purchases" element={<h2>Historial próximamente</h2>} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
