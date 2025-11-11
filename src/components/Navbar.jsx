@@ -1,24 +1,15 @@
 import { Link } from "react-router-dom";
 
-function Navbar() {
+export default function Navbar({onToggleTheme}){
   return (
-    <nav style={{
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      padding: "1rem 2rem",
-      background: "#222",
-      borderBottom: "1px solid #333",
-    }}>
-      <Link to="/" style={{ color: "#fff", textDecoration: "none", fontSize: "1.2rem", fontWeight: "bold" }}>
-        🎟️ GryeTickets
-      </Link>
-      <div style={{ display: "flex", gap: "1.5rem" }}>
-        <Link to="/" style={{ color: "#ccc", textDecoration: "none" }}>Eventos</Link>
-        <Link to="/purchases" style={{ color: "#ccc", textDecoration: "none" }}>Mis Compras</Link>
+    <nav className="bg-white border-gray-200 dark:bg-gray-900">
+      <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+        <span class="text-3xl font-bold text-gray-900 dark:text-white">Sistema de Tickets</span>
+        <Link to="/" className="content-center">Eventos</Link>
+        <Link to="/purchases" className="content-center">Mis Compras</Link>
+
+        <button onClick={onToggleTheme} className="px-2 py-1 rounded border">Theme</button>
       </div>
     </nav>
   );
 }
-
-export default Navbar;

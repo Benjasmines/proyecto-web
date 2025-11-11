@@ -13,13 +13,12 @@ function Home() {
         const data = await getEvents();
         console.log("Respuesta del backend:", data);
 
-        // ✅ Ajuste: los eventos están dentro de data.data
         const list = Array.isArray(data)
           ? data
           : data?.data || data?.events || [];
 
         if (!Array.isArray(list) || list.length === 0) {
-          console.warn("⚠️ No se recibieron eventos, usando mock.");
+          console.warn("No se recibieron eventos, usando mock.");
           setEvents([
             {
               id: "1",
@@ -77,8 +76,8 @@ function Home() {
   if (loading) return <h2 style={{ color: "#fff" }}>Cargando eventos...</h2>;
 
   return (
-    <main style={{ padding: "1rem", color: "#fff" }}>
-      <h1>🎟️ Eventos Disponibles</h1>
+    <main style={{ padding: "1rem", color: "#000000ff" }}>
+      <h1>Eventos Disponibles</h1>
       {error && (
         <p style={{ color: "orange", fontWeight: "bold" }}>{error}</p>
       )}

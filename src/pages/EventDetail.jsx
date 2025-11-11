@@ -13,14 +13,12 @@ function EventDetail() {
       try {
         const response = await getEvents();
 
-        // ✅ Asegurarse de acceder correctamente al array de eventos
         const list = Array.isArray(response)
           ? response
           : response?.data || [];
 
-        console.log("📦 Eventos (array real):", list);
+        console.log("Eventos :", list);
 
-        // ✅ Buscar el evento usando posibles variantes de ID
         const found = list.find((ev) => {
           const possibleIds = [
             ev.id,
@@ -49,12 +47,12 @@ function EventDetail() {
     fetchEvent();
   }, [id]);
 
-  if (loading) return <h2 style={{ color: "#fff" }}>Cargando evento...</h2>;
+  if (loading) return <h2 style={{ color: "#000000ff" }}>Cargando evento...</h2>;
   if (error) return <p style={{ color: "red" }}>{error}</p>;
   if (!event) return <p style={{ color: "#fff" }}>Evento no encontrado.</p>;
 
   return (
-    <main style={{ padding: "1rem", color: "#fff" }}>
+    <main style={{ padding: "1rem", color: "#000000ff" }}>
       <h1>{event.name}</h1>
 
       <img
