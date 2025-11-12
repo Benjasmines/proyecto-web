@@ -73,7 +73,13 @@ function Home() {
     fetchEvents();
   }, []);
 
-  if (loading) return <h2 style={{ color: "#fff" }}>Cargando eventos...</h2>;
+  if (loading) return (
+    <div class="flex flex-row gap-2 justify-center items-center h-screen">
+      <div class="w-4 h-4 rounded-full bg-blue-700 animate-bounce [animation-delay:.7s]"></div>
+      <div class="w-4 h-4 rounded-full bg-blue-700 animate-bounce [animation-delay:.3s]"></div>
+      <div class="w-4 h-4 rounded-full bg-blue-700 animate-bounce [animation-delay:.7s]"></div>
+    </div>
+  )
 
   return (
     <main style={{ padding: "1rem", color: "#000000ff" }}>

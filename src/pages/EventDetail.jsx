@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getEvents } from "../api/api";
+import { Link } from "react-router-dom";
 
 function EventDetail() {
   const { id } = useParams();
@@ -272,12 +273,12 @@ function EventDetail() {
                 <span>acá coloquen la lógica gracias :3</span>
               </p>
 
-              <button
-                className="mt-8 bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-3 px-6 text-lg rounded-lg transition transform hover:scale-105"
-                onClick={() => alert(`Reservaste entrada para ${event.name}`)}
+              <Link
+                to="/event/:id/checkout/:id"
+                className="mt-4 inline-block bg-sky-500 hover:bg-sky-600 text-white text-center font-medium py-2 px-4 rounded-lg transition-colors"
               >
-                Reservar Entrada
-              </button>
+                Reserva
+              </Link>
             </div>
           </div>
         </div>
