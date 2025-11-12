@@ -77,7 +77,7 @@ function Home() {
   if (loading) return <h2 style={{ color: "#fff" }}>Cargando eventos...</h2>;
 
   return (
-    <main style={{ padding: "1rem", color: "#fff" }}>
+    <main style={{ padding: "1rem", color: "#000" }}>
       <h1>🎟️ Eventos Disponibles</h1>
       {error && (
         <p style={{ color: "orange", fontWeight: "bold" }}>{error}</p>

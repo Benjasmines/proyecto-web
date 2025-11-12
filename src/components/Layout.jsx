@@ -4,15 +4,9 @@ import Footer from "../components/Footer";
 
 function Layout() {
   return (
-    <div className="app-container" style={{
-      minHeight: "100vh",
-      display: "flex",
-      flexDirection: "column",
-      backgroundColor: "#1a1a1a",
-      color: "#fff",
-    }}>
+    <div className="min-h-screen flex flex-col bg-gray-950 text-gray-100">
       <Navbar />
-      <main style={{ flex: 1, padding: "2rem" }}>
+      <main className="flex-1 p-6">
         <Outlet />
       </main>
       <Footer />
