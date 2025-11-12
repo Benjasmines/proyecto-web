@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 function EventCard({ event }) {
   return (
-    <div className="flex flex-col gap-15 bg-gray-800 rounded-xl shadow-lg overflow-hidden transform transition-transform hover:scale-105 hover:shadow-2xl">
+    <div className="flex flex-col gap-15 bg-gray-800 rounded-xl border-2 border-gray-900 shadow-lg overflow-hidden transform transition-transform hover:scale-105 hover:shadow-2xl">
       <img
         src={event.image}
         alt={event.name}
