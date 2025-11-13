@@ -1,9 +1,38 @@
-const API_BASE_URL = "https://tickets.grye.org";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+// 🔹 Obtener todos los eventos, recorriendo todas las páginas
 export async function getEvents() {
-  const res = await fetch(`${API_BASE_URL}/events`);
-  if (!res.ok) throw new Error("Error al obtener eventos");
-  return res.json();
+  const allEvents = [];
+  let page = 1;
+  let hasMore = true;
+
+  while (hasMore) {
+    const res = await fetch(`${API_BASE_URL}/events?page=${page}`);
+    if (!res.ok) throw new Error(`Error al obtener eventos (página ${page})`);
+
+    const json = await res.json();
+
+    // Algunos backends devuelven los datos dentro de 'data', otros directamente
+    const events = Array.isArray(json.data)
+      ? json.data
+      : Array.isArray(json.events)
+      ? json.events
+      : [];
+
+    allEvents.push(...events);
+
+    // Detectar si hay más páginas
+    // Esto depende de cómo tu backend indique la paginación
+    // Aquí cubrimos los casos más comunes:
+    if (events.length === 0 || json.next_page === null || json.page >= json.total_pages) {
+      hasMore = false;
+    } else {
+      page++;
+    }
+  }
+
+  console.log(`✅ Eventos totales obtenidos: ${allEvents.length}`);
+  return allEvents;
 }
 
 export async function createReservation(eventId, ticketType, quantity) {
