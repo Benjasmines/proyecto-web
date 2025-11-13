@@ -18,7 +18,7 @@ function EventCard({ event }) {
           <p className="text-gray-500 text-sm">🎫 {event.category}</p>
         </div>
         <Link
-          to={`/event/${event.id}`}
+          to={`/event/${event._id}`}
           className="mt-4 inline-block bg-sky-500 hover:bg-sky-600 text-white text-center font-medium py-2 px-4 rounded-lg transition-colors"
         >
           Ver Detalle
