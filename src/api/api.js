@@ -1,6 +1,6 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-// 🔹 Obtener todos los eventos, recorriendo todas las páginas
+// Obtener todos los eventos, recorriendo todas las páginas
 export async function getEvents() {
   const allEvents = [];
   let page = 1;
@@ -21,9 +21,6 @@ export async function getEvents() {
 
     allEvents.push(...events);
 
-    // Detectar si hay más páginas
-    // Esto depende de cómo tu backend indique la paginación
-    // Aquí cubrimos los casos más comunes:
     if (events.length === 0 || json.next_page === null || json.page >= json.total_pages) {
       hasMore = false;
     } else {
@@ -31,7 +28,7 @@ export async function getEvents() {
     }
   }
 
-  console.log(`✅ Eventos totales obtenidos: ${allEvents.length}`);
+  console.log(`Eventos totales obtenidos: ${allEvents.length}`);
   return allEvents;
 }
 
@@ -60,3 +57,4 @@ export async function getPurchases() {
   if (!res.ok) throw new Error("Error al obtener historial de compras");
   return res.json();
 }
+
