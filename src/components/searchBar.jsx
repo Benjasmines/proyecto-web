@@ -1,25 +1,43 @@
-const API_CATEGORY = import.meta.env.VITE_API_BASE_URL
 import { useState, useEffect } from "react";
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
 const SearchBar = ({ onSearch }) => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [query, setQuery] = useState("");
 
-  // 🔹 Cargar categorías desde tu API
   useEffect(() => {
-    fetch("API_CATEGORY")
-      .then((res) => res.json())
-      .then((data) => setCategories(data))
-      .catch((err) => console.error("Error al obtener categorías:", err));
+    async function loadCategories() {
+      try {
+        const res = await fetch(`${API_BASE_URL}/events`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+        const json = await res.json();
+        const list = Array.isArray(json.data) ? json.data : [];
+
+        // Extraemos las categorías únicas y las normalizamos
+        const unique = [
+          ...new Set(
+            list
+              .map((e) => e.category?.trim().toLowerCase())
+              .filter(Boolean)
+          ),
+        ];
+
+        setCategories(unique);
+      } catch (err) {
+        console.error("Error al obtener categorías:", err);
+        setCategories([]); // fallback vacío
+      }
+    }
+
+    loadCategories();
   }, []);
 
-  // 🔹 Ejecutar búsqueda
   const handleSearch = (e) => {
     e.preventDefault();
-    if (onSearch) {
-      onSearch({ category: selectedCategory, query });
-    }
+    if (onSearch) onSearch({ category: selectedCategory, query });
   };
 
   return (
@@ -32,14 +50,13 @@ const SearchBar = ({ onSearch }) => {
           onChange={(e) => setSelectedCategory(e.target.value)}
         >
           <option value="">Todas las categorías</option>
-          {categories.map((ev) => (
-            <option key={ev.category} value={category.name}>
-              {category.name}
+          {categories.map((cat) => (
+            <option key={cat} value={cat}>
+              {cat.charAt(0).toUpperCase() + cat.slice(1)}
             </option>
           ))}
         </select>
 
-        {/* Input de búsqueda */}
         <input
           type="text"
           value={query}
@@ -48,7 +65,6 @@ const SearchBar = ({ onSearch }) => {
           placeholder="Buscar por nombre de evento..."
         />
 
-        {/* Botón de búsqueda */}
         <button
           type="submit"
           className="bg-blue-600 text-white px-4 hover:bg-blue-700 transition"
