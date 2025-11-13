@@ -22,7 +22,7 @@ function EventDetail() {
 
         const found = list.find((ev) => {
           const possibleIds = [
-            ev.id,
+            ev._id,
             ev._id,
             ev._id?.$oid,
             ev._id?.toString?.(),
@@ -146,7 +146,12 @@ function EventDetail() {
             <div className="py-6">
               <p className="mb-3">
                 <b className="font-semibold">General:</b>{" "}
-                <span>acá coloquen la lógica gracias :3</span>
+                <span className="text-black">{event.tickets.map((ticket) => (
+                  <div key={ticket.type}>
+                    <p>{ticket.type}</p>
+                    <p>${ticket.price.toLocaleString()} — Disponibles: {ticket.available}</p>
+                  </div>
+                ))}</span>
               </p>
               <form className="max-w-xs mx-auto">
                 <div className="relative flex items-center gap-2 scale-110">
