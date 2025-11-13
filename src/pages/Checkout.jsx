@@ -1,4 +1,35 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 export default function Checkout() {
+  const navigate = useNavigate();
+  const [timeLeft, setTimeLeft] = useState(0.5 * 60);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          alert(
+            "Tardaste mucho perro klo, andate bien a la xuxa."
+          );
+          navigate(-1);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [navigate]);
+
+  function formatTime(secondsTotal) {
+    const minutes = Math.floor(secondsTotal / 60);
+    const seconds = secondsTotal % 60;
+    return `${minutes.toString().padStart(2, "0")}:${seconds
+      .toString()
+      .padStart(2, "0")}`;
+  }
+
   return (
     <div className="min-h-screen bg-gray-950 text-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <h1 className="text-3xl font-bold text-center mb-10">Completar Compra</h1>
@@ -33,6 +64,16 @@ export default function Checkout() {
           </button>
         </div>
 
+        <p className="text-center mb-8 text-sm text-gray-300">
+          Tiempo restante para completar la compra:{" "}
+          <span
+            className={
+              timeLeft <= 60 ? "text-red-400 font-semibold" : "text-yellow-300"
+            }
+          >
+            {formatTime(timeLeft)}
+          </span>
+        </p>
         {/* aca va la info del comprador, hay que remplazar lo blanco con los datos de la api*/}
         <div className="bg-gray-900 rounded-lg shadow-lg p-6 space-y-4">
           <h2 className="text-lg font-semibold">Resumen de compra</h2>
