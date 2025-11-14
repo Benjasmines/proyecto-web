@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getEvents, createReservation } from "../api/api";
 import { Link } from "react-router-dom";
 
-export default function EventDetail() {
+function EventDetail() {
   const { id } = useParams();
   const nav = useNavigate();
 
@@ -20,6 +20,8 @@ export default function EventDetail() {
         const list = Array.isArray(response)
           ? response
           : response?.data || [];
+
+        console.log("Eventos :", list);
 
         const found = list.find((ev) => {
           const ids = [
@@ -102,58 +104,163 @@ export default function EventDetail() {
     }
   };
 
-  if (loading)
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin w-10 h-10 rounded-full border-4 border-blue-500 border-t-transparent"></div>
-      </div>
-    );
+  if (loading) return (
+    <div class="flex flex-row gap-2 justify-center items-center h-screen">
+      <div class="w-4 h-4 rounded-full bg-blue-700 animate-bounce [animation-delay:.7s]"></div>
+      <div class="w-4 h-4 rounded-full bg-blue-700 animate-bounce [animation-delay:.3s]"></div>
+      <div class="w-4 h-4 rounded-full bg-blue-700 animate-bounce [animation-delay:.7s]"></div>
+    </div>
+  )
 
   if (error)
-    return (
-      <div className="fixed inset-0 flex justify-center items-center">
-        <div className="bg-red-100 dark:bg-red-900 border-l-4 border-red-500 px-4 py-3 rounded-lg text-red-700 dark:text-red-100 shadow-lg">
-          {error}
-        </div>
+  return (
+    <div className="fixed inset-0 flex justify-center items-center">
+      <div
+        role="alert"
+        className="inline-flex items-center gap-2 bg-red-100 dark:bg-red-900 border-l-4 border-red-500 dark:border-red-700 text-red-900 dark:text-red-100 px-4 py-3 rounded-lg transition duration-300 ease-in-out hover:bg-red-200 dark:hover:bg-red-800 transform hover:scale-105 shadow-lg max-w-md"
+      >
+        <svg
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          fill="none"
+          className="h-5 w-5 flex-shrink-0 text-red-600"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M13 16h-1v-4h1m0-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            strokeWidth="2"
+            strokeLinejoin="round"
+            strokeLinecap="round"
+          ></path>
+        </svg>
+        <p className="text-sm font-semibold">Error - {error}</p>
       </div>
-    );
+    </div>
+  );
+
+  if (!event) return (
+    <div className="fixed inset-0 flex justify-center items-center">
+      <div
+        role="alert"
+        className="inline-flex items-center gap-2 bg-red-100 dark:bg-red-900 border-l-4 border-red-500 dark:border-red-700 text-red-900 dark:text-red-100 px-4 py-3 rounded-lg transition duration-300 ease-in-out hover:bg-red-200 dark:hover:bg-red-800 transform hover:scale-105 shadow-lg max-w-md"
+      >
+        <svg
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          fill="none"
+          className="h-5 w-5 flex-shrink-0 text-red-600"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M13 16h-1v-4h1m0-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            strokeWidth="2"
+            strokeLinejoin="round"
+            strokeLinecap="round"
+          ></path>
+        </svg>
+        <p className="text-sm font-semibold">Error - Evento no encontrado.</p>
+      </div>
+    </div>
+  )
 
   return (
-    <div className="flex flex-row gap-16 justify-center items-center min-h-screen bg-white dark:bg-gray-800 p-6">
-
-      {/* IZQUIERDA */}
-      <div className="border-2 border-gray-600 rounded dark:bg-gray-900 p-8 max-w-xl">
+    <div
+      className="flex flex-row gap-10 justify-center items-stretch
+        bg-white dark:bg-gray-800 p-6 rounded-xl 
+        shadow-lg dark:shadow-none w-full max-w-6xl mx-auto"
+    >
+      {/* LADO IZQUIERDO */}
+      <div className="border-2 border-gray-600 rounded dark:bg-gray-900 p-8 w-1/2 flex flex-col">
         <img
           src={
             event.image ||
-            "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800"
-          }
+            'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800'
+          }   
           alt={event.name}
           className="w-full rounded mb-6"
         />
 
-        <h1 className="text-3xl font-bold dark:text-gray-200">
+        <p className="font-sans text-2xl font-bold dark:text-gray-200">
           {event.name}
-        </h1>
+        </p>
 
-        <div className="mt-4 dark:text-gray-200">
-          <p><b>Categoría:</b> {event.category || "Sin categoría"}</p>
-          <p>
-            <b>Fecha:</b>{" "}
-            {new Date(event.date).toLocaleString("es-CL")}
+        <div className="mt-4 space-y-3 dark:text-gray-200">
+        {/* Categoría */}
+          <p className="flex items-center gap-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.8"
+              stroke="currentColor"
+              className="w-5 h-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+            <b className="font-semibold">Categoría:</b> {event.category || 'Sin categoría'}
           </p>
-          <p><b>Lugar:</b> {event.location}</p>
+
+        {/* Fecha */}
+        <p className="flex items-center gap-2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="1.8"
+            stroke="currentColor"
+            className="w-5 h-5"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 8v4l3 2m6-6v10a2 2 0 01-2 2H5a2 2 0 01-2-2V8m18 0H3m5-4v4m8-4v4"
+            />
+          </svg>
+          
+          <b>Fecha:</b>{" "}
+            {new Date(event.date).toLocaleString("es-CL")}
+        </p>
+
+        {/* Lugar */}
+        <p className="flex items-center gap-2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="1.8"
+            stroke="currentColor"
+            className="w-5 h-5"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 11a3 3 0 100-6 3 3 0 000 6z"
+            />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M19 10c0 7-7 12-7 12s-7-5-7-12a7 7 0 1114 0z"
+            />
+          </svg>
+
+          <b className="font-semibold">Lugar:</b> {event.location || 'Por confirmar'}
           {event.description && <p className="mt-4">{event.description}</p>}
-        </div>
+        </p>
       </div>
+    </div>
 
-      {/* DERECHA */}
-      <div className="border-2 border-gray-600 rounded dark:bg-gray-900 p-8 w-[380px]">
-        <h2 className="font-bold text-3xl dark:text-gray-200 mb-6">
-          Seleccione sus tickets:
-        </h2>
+    {/* LADO DERECHO */}
+    <div className="border-2 border-gray-600 rounded dark:bg-gray-900 p-8 w-1/2 flex flex-col">
+      <div className="flex flex-col items-start text-left dark:text-gray-200 w-full">
+        <p className="font-bold text-4xl mb-8">Seleccione sus tickets:</p>
 
-        <div className="divide-y divide-gray-600">
+        <div className="w-full divide-y divide-gray-600 flex-1">
+          
+          <div className="divide-y divide-gray-600">
           {event.tickets.map((t) => {
             const q = qtyByType[t.type] || 0;
             const max = Math.min(110, t.available);
@@ -166,14 +273,14 @@ export default function EventDetail() {
                 </p>
 
                 {/* Selector cantidad */}
-                <div className="relative flex items-center gap-2 scale-110">
+                <div className="relative flex items-center justify-center gap-2 scale-110">
                   <button
                     type="button"
                     onClick={() => dec(t.type)}
                     disabled={q <= 0}
                     className="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 h-8 w-8 rounded flex justify-center items-center"
                   >
-                    −
+                    -
                   </button>
 
                   <input
@@ -214,7 +321,11 @@ export default function EventDetail() {
           </div>
 
         </div>
+        </div>
       </div>
     </div>
+  </div>
   );
 }
+
+export default EventDetail;

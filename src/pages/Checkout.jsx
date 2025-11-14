@@ -10,14 +10,8 @@ export default function Checkout() {
   const [reservation, setReservation] = useState(null);
   const [items, setItems] = useState([]);
   const [total, setTotal] = useState(0);
-
   const [timeLeft, setTimeLeft] = useState(0);
-
-  const [buyer, setBuyer] = useState({
-    name: "",
-    email: ""
-  });
-
+  const [buyer, setBuyer] = useState({ name: "", email: "" });
 
   useEffect(() => {
     async function fetchReservation() {
@@ -33,10 +27,8 @@ export default function Checkout() {
         const expires = new Date(data.expires_at).getTime();
         const now = Date.now();
         const diff = Math.floor((expires - now) / 1000);
-
         const MAX_TIME = 300;
         setTimeLeft(diff > 0 ? Math.min(diff, MAX_TIME) : 0);
-
       } catch (err) {
         alert("Reserva inválida o vencida.");
         navigate("/");
@@ -46,12 +38,11 @@ export default function Checkout() {
     fetchReservation();
   }, [reservationId]);
 
-  // Temporizador 
+  // Temporizador
   useEffect(() => {
     if (timeLeft <= 0) return;
-
     const interval = setInterval(() => {
-      setTimeLeft(prev => {
+      setTimeLeft((prev) => {
         if (prev <= 1) {
           clearInterval(interval);
           alert("El tiempo expiró. Volviendo a eventos.");
@@ -61,47 +52,47 @@ export default function Checkout() {
         return prev - 1;
       });
     }, 1000);
-
     return () => clearInterval(interval);
   }, [timeLeft]);
 
-
   async function completePurchase() {
-  try {
-    const payload = {
-      reservation_id: reservationId,
-      buyer: {
-        name: buyer.name,
-        email: buyer.email,
-      },
-    };
-
-    console.log("ENVIANDO A /checkout:", payload);
-
-    const res = await fetch(`${API_BASE_URL}/checkout`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-    const data = await res.json();
-    console.log("RESPUESTA:", data);
-
-    if (!res.ok) {
-      alert("Datos enviados:", JSON.stringify(payload, null, 2));
-      throw new Error("Error al completar compra");
+    if (!reservation) return;
+    if (!buyer.name || !buyer.email) {
+      alert("Por favor completa tu nombre y email");
+      return;
     }
 
-    navigate(`/purchases/${data._id}`);
+    try {
+      const payload = {
+        reservation_id: reservationId,
+        buyer: { name: buyer.name, email: buyer.email },
+        items: items.map((item) => ({ type: item.type, quantity: item.quantity })),
+      };
 
-  } catch (err) {
-    console.error(err);
-    alert("Hubo un problema al completar la compra.");
+      const res = await fetch(`${API_BASE_URL}/checkout`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        const msg = data.detail
+          ? Array.isArray(data.detail)
+            ? data.detail.map((d) => JSON.stringify(d)).join(", ")
+            : JSON.stringify(data.detail)
+          : "Error al completar compra";
+        throw new Error(msg);
+      }
+
+      // Aquí usamos el purchase_id que devuelve el backend
+      navigate(`/purchases/${data.purchase_id}`);
+    } catch (err) {
+      console.error("Error al completar compra:", err);
+      alert("Hubo un problema al completar la compra: " + err.message);
+    }
   }
-}
-
-
-
 
   const formatTime = (sec) => {
     const m = Math.floor(sec / 60);
@@ -116,63 +107,55 @@ export default function Checkout() {
     <div className="min-h-screen dark:bg-gray-950 dark:text-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <h1 className="text-3xl font-bold text-center mb-10">Completar Compra</h1>
 
-      <p className="text-center mb-8 text-lg">
-        Tiempo restante:{" "}
-        <span
-          className={timeLeft <= 60 ? "text-red-400 font-bold" : "text-yellow-300"}
-        >
+      <p className="text-center mb-8 text-sm dark:text-gray-300">
+        Tiempo restante para completar la compra:{" "}
+        <span className={timeLeft <= 60 ? "text-red-400 font-bold" : "text-yellow-300"}>
           {formatTime(timeLeft)}
         </span>
       </p>
 
       <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
-
-        {/* Datos comprador */}
+        {/* Información comprador */}
         <div className="border-2 border-gray-600 dark:bg-gray-900 rounded-lg shadow-lg p-6 space-y-6">
-          <div>
-            <h2 className="text-lg font-semibold mb-3">Información del comprador</h2>
-
-            <input
-              type="text"
-              placeholder="Nombre completo"
-              className="w-full px-3 py-2 rounded-md dark:bg-gray-800 border border-gray-700"
-              value={buyer.name}
-              onChange={(e) => setBuyer({ ...buyer, name: e.target.value })}
-            />
-
-            <input
-              type="email"
-              placeholder="Email"
-              className="mt-3 w-full px-3 py-2 rounded-md dark:bg-gray-800 border border-gray-700"
-              value={buyer.email}
-              onChange={(e) => setBuyer({ ...buyer, email: e.target.value })}
-            />
-          </div>
+          <h2 className="text-lg font-semibold mb-3">Información de Comprador</h2>
+          <input
+            type="text"
+            placeholder="Nombre y apellido"
+            className="mt-4 w-full px-3 text-black dark:text-gray-200 py-2 rounded-md dark:bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-sky-500"
+            value={buyer.name}
+            onChange={(e) => setBuyer({ ...buyer, name: e.target.value })}
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            className="mt-4 w-full px-3 text-black dark:text-gray-200 py-2 rounded-md dark:bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-sky-500"
+            value={buyer.email}
+            onChange={(e) => setBuyer({ ...buyer, email: e.target.value })}
+          />
 
           <button
             onClick={completePurchase}
-            className="w-full py-3 bg-sky-500 hover:bg-sky-600 text-white font-semibold rounded-md"
+            disabled={timeLeft <= 0}
+            className="w-full py-3 mt-4 bg-sky-500 hover:bg-sky-600 text-white font-semibold rounded-md transition-colors disabled:opacity-50"
           >
             Completar Compra
           </button>
         </div>
 
-        {/* Resumen compra */}
+        {/* Resumen de compra */}
         <div className="border-2 border-gray-600 dark:bg-gray-900 rounded-lg shadow-lg p-6 space-y-4">
-          <h2 className="text-lg font-semibold">Resumen de compra</h2>
-
+          <h2 className="text-lg font-semibold">Resumen de Compra</h2>
           {items.map((item, idx) => (
             <div key={idx} className="border-t pt-3 dark:border-gray-700">
               <p className="font-medium dark:text-gray-300">{item.type}</p>
               <p className="dark:text-gray-400 text-sm">
-                {item.quantity}x {item.type}
+                {item.quantity} × {item.type}
               </p>
             </div>
           ))}
-
-          <div className="border-t pt-4 flex justify-between items-center dark:border-gray-700">
-            <p className="font-semibold">Total</p>
-            <p className="text-xl font-bold">
+          <div className="border-t dark:border-gray-700 pt-4 flex justify-between items-center">
+            <p className="font-semibold dark:text-gray-300">Total</p>
+            <p className="text-xl font-bold dark:text-white">
               ${total.toLocaleString("es-CL")}
             </p>
           </div>

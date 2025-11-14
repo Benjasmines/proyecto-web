@@ -118,17 +118,22 @@ function Home() {
     );
 
   return (
-    <main className="bg-gray-200 dark:bg-gray-900">
+    <main className="bg-gray-50 dark:bg-gray-900 w-full">
       <section className="w-full flex flex-col items-center justify-center text-center
-        bg-[url('https://images.pexels.com/photos/18160511/pexels-photo-18160511.jpeg')] bg-cover bg-position-[center] dark:bg-gray-800 h-80 py-24 px-6">
-        <div className="max-w-md mx-auto">
-          <h1 className="text-3xl font-semibold tracking-tight text-black dark:text-white sm:text-4xl mb-4">
+        bg-[url('https://images.pexels.com/photos/18160511/pexels-photo-18160511.jpeg')] bg-cover bg-center 
+        dark:bg-gray-800 h-80 py-24 px-6">
+
+        <div className="max-w-xl mx-auto flex flex-col items-center">
+          <h1 className="text-6xl font-bold tracking-tight text-white text-shadow-lg dark:text-white sm:text-4xl mb-4">
             Eventos Disponibles
           </h1>
-          <p className="text-gray-600 dark:text-gray-300 mb-8 mt-3 text-center">
+
+          <p className="text-white text-xl mb-8 mt-3 text-shadow-lg text-center max-w-lg">
             Descubre los próximos eventos y consigue tus entradas fácilmente.
           </p>
+
         </div>
+
         <SearchBar onSearch={handleSearch} />
       </section>
 

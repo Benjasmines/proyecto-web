@@ -84,7 +84,7 @@ const SearchBar = ({ onSearch }) => {
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="flex-1 min-w-0 p-2 outline-none bg-white"
+          className="flex-1 min-w-0 p-2 outline-none bg-white text-gray-800 dark:text-gray-100 dark:bg-gray-900"
           placeholder="Buscar nombre del evento..."
         />
 

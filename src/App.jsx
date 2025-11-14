@@ -1,22 +1,24 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import Home from "./pages/Home";
 import Checkout from "./pages/Checkout.jsx";
 import Purchases from "./pages/Purchases.jsx";
 import EventDetail from "./pages/EventDetail";
-import Navbar from "./components/Navbar.jsx";
+import Layout from "./components/Layout";
+import "./components/Layout.jsx";
 
 function App() {
-  const t = () => document.documentElement.classList.toggle("dark");
+  const t=()=>document.documentElement.classList.toggle("dark");
 
   return (
     <Router>
-      <Navbar onToggleTheme={t} />
-
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/event/:eventId" element={<EventDetail />} />
-        <Route path="/checkout/:reservationId" element={<Checkout />} />
-        <Route path="/purchases" element={<Purchases />} />
+
+        <Route element={<Layout onToggleTheme={t} />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/event/:eventId" element={<EventDetail />} />
+          <Route path="/checkout/:reservationId" element={<Checkout />} />
+          <Route path="/purchases/:id" element={<Purchases />} />
+        </Route>
 
       </Routes>
     </Router>
